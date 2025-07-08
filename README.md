@@ -1,7 +1,7 @@
 
 # Nginx Proxy_Pass Host Header Test
 
-This Docker setup demonstrates the different behaviors of nginx's `proxy_pass` directive regarding the Host header.
+This Docker setup demonstrates the default behavior of nginx's `proxy_pass` directive regarding the Host header.
 
 ## Setup & Running
 
