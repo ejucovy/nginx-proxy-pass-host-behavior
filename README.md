@@ -24,7 +24,7 @@ docker-compose up --build
 
 ## What to Look For
 
-1. The **Host** header (highlighted in yellow) will be different for each route
+1. The **Host** header (highlighted in yellow) shows what nginx actually sends to the backend
 2. The **X-Nginx-Route** header shows which nginx location was used
 3. The **X-Original-Host** header shows what nginx put in its $host variable
 4. The **X-Original-Http-Host** header shows what nginx originally received in the Host header from the web request
