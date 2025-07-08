@@ -5,8 +5,9 @@ This Docker setup demonstrates the different behaviors of nginx's `proxy_pass` d
 
 ## Setup & Running
 
-1. Create a directory and save all the files above in it
-2. Run the test:
+1. Clone this repo
+
+2. Run it
 ```bash
 docker-compose up --build
 ```
@@ -16,30 +17,27 @@ docker-compose up --build
 ## Test Routes
 
 - **http://localhost:8080/with-variable** - Uses `proxy_pass $backend_url`
-  - Expected: Host header = "localhost:8080" (preserves original)
   
 - **http://localhost:8080/without-variable** - Uses `proxy_pass http://backend:3000`  
-  - Expected: Host header = "backend:3000" (set to upstream)
   
 - **http://localhost:8080/with-upstream** - Uses `proxy_pass http://backend_upstream`
-  - Expected: Host header = "backend_upstream" (set to upstream name)
 
 ## What to Look For
 
 1. The **Host** header (highlighted in yellow) will be different for each route
 2. The **X-Nginx-Route** header shows which nginx location was used
-3. The **X-Original-Host** header shows what nginx originally received
+3. The **X-Original-Host** header shows what nginx put in its $host variable
+4. The **X-Original-Http-Host** header shows what nginx originally received in the Host header from the web request
 
-## Key Differences
+## Observed Results
 
-- **Variable in proxy_pass**: Preserves the original Host header from the client
+- **Variable in proxy_pass**: Sets Host header to the proxy target's hostname and port
 - **Hardcoded URL**: Sets Host header to the proxy target's hostname and port
 - **Upstream name**: Sets Host header to the upstream block name
 
-This demonstrates the behavior you asked about - variables preserve the original Host header, while literal URLs change it to match the upstream target.
+In all cases, the default behavior aligns with [nginx's documented behavior](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/#passing-request-headers):
 
-## Cleanup
+> "By default, NGINX modifies two header fields in proxied requests, “Host” and “Connection”, 
+> and eliminates the header fields whose values are empty strings. “Host” is set to the value 
+> of the $proxy_host variable, and “Connection” is set to close.
 
-```bash
-docker-compose down
-```
